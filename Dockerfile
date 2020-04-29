@@ -34,12 +34,14 @@ RUN docker-php-ext-install json
 RUN apt-get -y install zlib1g-dev
 RUN docker-php-ext-install zip
 
+# Required for Horizon
+RUN docker-php-ext-install pcntl
+
 RUN apt-get -y install libicu-dev
 RUN docker-php-ext-install -j$(nproc) intl
 
 RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install gettext
-
 RUN apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ 
 RUN docker-php-ext-install -j$(nproc) gd
@@ -50,7 +52,6 @@ RUN a2enmod rewrite headers
 # Setup apache vhost
 RUN curl https://raw.githubusercontent.com/RoverWire/virtualhost/master/virtualhost.sh > /usr/bin/virtualhost
 RUN chmod +x /usr/bin/virtualhost
-RUN virtualhost create 127.0.0.1 /var/www/html/public
 
 # Install node
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
